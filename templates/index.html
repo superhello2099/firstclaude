@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Claude Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .chat-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            width: 50%;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .user-message {
+            text-align: right;
+            color: blue;
+        }
+        .ai-message {
+            text-align: left;
+            color: green;
+        }
+        textarea {
+            width: 50%;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Claude Chat</h1>
+    <div id="chat-box" class="chat-box"></div>
+    <textarea id="user-input" placeholder="Type your message here..."></textarea><br>
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="resetChat()">Reset Chat</button>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input").value.trim();
+            document.getElementById("user-input").value = "";
+
+            if (!userInput) return;
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class="user-message"><b>You:</b> ${userInput}</div>`;
+            chatBox.innerHTML += `<div class="ai-message"><b>Claude:</b> ${data.reply}</div>`;
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function resetChat() {
+            await fetch("/reset", { method: "POST" });
+            document.getElementById("chat-box").innerHTML = "<div class='ai-message'><b>Claude:</b> Chat reset!</div>";
+        }
+    </script>
+</body>
+</html>
