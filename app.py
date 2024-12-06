@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, Response, render_template
-from pyngrok import ngrok
 import anthropic
 import os
 import json
@@ -60,6 +59,6 @@ def reset_context():
 
 # 开启 Flask 和 ngrok
 if __name__ == "__main__":
-    public_url = ngrok.connect(5000)
-    print(f"Public URL: {public_url}")
-    app.run(host="0.0.0.0", port=5000)
+    import os
+    port = int(os.getenv("PORT", 5000))  # Render 提供的动态端口
+    app.run(host="0.0.0.0", port=port)
