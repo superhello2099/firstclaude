@@ -1,3 +1,4 @@
 Flask==2.3.3
 pyngrok==5.2.2
 anthropic==0.3.0
+pydantic==1.10.12
